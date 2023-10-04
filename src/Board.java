@@ -41,6 +41,10 @@ public class Board {
         return positions[position.getRow()][position.getColumn()];
     }
 
+    public Piece getPiece(int row, int column) {
+        return positions[row][column];
+    }
+
     public boolean validateMove(Position currentPosition, Position newPosition) {
         Piece piece = getPiece(currentPosition);
 
@@ -76,8 +80,27 @@ public class Board {
     public void printBoard() {
         System.out.println();
         for (int i = 0; i < 8; i++) {
-            System.out.println(Arrays.toString(positions[i]));
+            System.out.print((8 - i) + " | ");
+            for (int j = 0; j < 8; j++) {
+                if (getPiece(i, j) == null) {
+                    if ((i + j) % 2 == 0) {
+                        System.out.print("□ ");
+                    } else {
+                        System.out.print("■ ");
+                    }
+                } else {
+                    System.out.print(getPiece(i, j) + " ");
+                }
+            }
+            System.out.println();
         }
-        System.out.println();
+        System.out.println("   ------------------------");
+        System.out.println("    A  B  C  D  E  F  G  H");
     }
+
+//        System.out.println();
+//        for (int i = 0; i < 8; i++) {
+//            System.out.println(Arrays.toString(positions[i]));
+//        }
+//        System.out.println();
 }

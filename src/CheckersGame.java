@@ -58,8 +58,8 @@ public class CheckersGame {
 
     private static Position readPosition(Scanner scanner) {
         String[] coordinates = scanner.nextLine().split(" ");
-        int row = Integer.parseInt(coordinates[0]);
-        int column = Integer.parseInt(coordinates[1]);
+        int row = 8 - Integer.parseInt(coordinates[0]);
+        int column = coordinates[1].charAt(0) - 65;
         return new Position(row, column);
     }
 

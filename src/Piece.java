@@ -22,9 +22,10 @@ public class Piece {
 
     @Override
     public String toString() {
-        return "Piece{" +
-                "" + colour +
-                ", " + currentPosition +
-                '}';
+        if (Colour.BLACK.equals(getColour())) {
+            return "⛂";
+        } else {
+            return "⛀";
+        }
     }
 }
