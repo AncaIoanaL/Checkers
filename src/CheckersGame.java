@@ -47,7 +47,7 @@ public class CheckersGame {
 
                 }
             } else {
-                System.out.println("Player " + currentPlayer.getPlayerNumber() + " this is an invalid move as you are in check, please try again.");
+                System.out.println("Player " + currentPlayer.getPlayerNumber() + " this is an invalid move, please try again.");
             }
 
             if (currentPlayer.getPiecesCount() == 0) {
