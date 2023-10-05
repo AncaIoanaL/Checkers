@@ -1,5 +1,5 @@
 # Checkers
-Java program to play checkers. The program uses Scanner to take the current position and new position from each player. The current player will have to input the row number, a spacebar and then the capital letter of the column according to checkers board below. For example, if the player inputs 3 A (current position) and 4 B (new position), the program will move the black piece accordingly.
+Java program to play checkers. The program uses Scanner to take the current position and new position from each player. The current player will have to input the row number, a space and then the capital letter of the column according to checkers board below. For example, if the player inputs 3 A (current position) and 4 B (new position), the program will move the black piece accordingly.
 
 ![checkers-board.jpg](image%2Fcheckers-board.jpg)
 
