@@ -7,7 +7,14 @@ public class King extends Piece {
     @Override
     public void move(Position newPosition) {
         super.move(newPosition);
+    }
 
-
+    @Override
+    public String toString() {
+        if (Colour.BLACK.equals(getColour())) {
+            return "⛃";
+        } else {
+            return "⛁";
+        }
     }
 }

@@ -24,6 +24,11 @@ public class CheckersGame {
             if (validatePlayerColour(pieceToMove, currentPlayer)) {
                 if (board.validateMove(currentPosition, newPosition)) {
                     board.move(currentPosition, newPosition);
+
+                    if (Board.validateIfPieceCanBeKing(currentPosition, currentPlayer.getColour())) {
+                        board.promoteToKing(currentPosition, currentPlayer.getColour());
+                    }
+
                     board.printBoard();
 
                     if (currentPlayer.equals(PLAYER_1)) {
@@ -31,7 +36,7 @@ public class CheckersGame {
                     } else {
                         currentPlayer = PLAYER_1;
                     }
-                } else if (board.validateAttack(currentPosition, newPosition)) {
+                } else if (board.validateAttack(currentPosition, newPosition, board)) {
                     board.move(currentPosition, newPosition);
                     board.printBoard();
 
@@ -40,18 +45,17 @@ public class CheckersGame {
                     } else {
                         PLAYER_1.decrementPieceCount();
                     }
-
-
-                    // while (more attacks possible) {ask new position for attack and validate attack} - deja facuta sus in while
-
-
                 }
             } else {
                 System.out.println("Player " + currentPlayer.getPlayerNumber() + " this is an invalid move, please try again.");
             }
 
             if (currentPlayer.getPiecesCount() == 0) {
-                System.out.println("Player " + currentPlayer.getPlayerNumber() + " HAS WON!");
+                if (currentPlayer.getPlayerNumber() == 1) {
+                    System.out.println("PLAYER 2 HAS WON!");
+                } else {
+                    System.out.println("PLAYER 1 HAS WON!");
+                }
             }
         }
     }
