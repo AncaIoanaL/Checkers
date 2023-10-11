@@ -14,18 +14,18 @@ public class CheckersGame {
         Scanner scanner = new Scanner(System.in);
 
         while (PLAYER_1.getPiecesCount() != 0 && PLAYER_2.getPiecesCount() != 0) {
-            System.out.print("Player " + currentPlayer.getPlayerNumber() + " enter current position: ");
+            System.out.print(currentPlayer + " enter current position: ");
             Position currentPosition = readPosition(scanner);
             Piece pieceToMove = board.getPiece(currentPosition);
 
-            System.out.print("Player " + currentPlayer.getPlayerNumber() + " enter new position: ");
+            System.out.print(currentPlayer + " enter new position: ");
             Position newPosition = readPosition(scanner);
 
             if (validatePlayerColour(pieceToMove, currentPlayer)) {
-                if (board.validateMove(currentPosition, newPosition)) {
+                if (board.validMove(currentPosition, newPosition)) {
                     board.move(currentPosition, newPosition);
 
-                    if (Board.validateIfPieceCanBeKing(currentPosition, currentPlayer.getColour())) {
+                    if (board.validateIfPieceCanBecomeKing(currentPosition, currentPlayer.getColour())) {
                         board.promoteToKing(currentPosition, currentPlayer.getColour());
                     }
 
@@ -36,7 +36,7 @@ public class CheckersGame {
                     } else {
                         currentPlayer = PLAYER_1;
                     }
-                } else if (board.validateAttack(currentPosition, newPosition, board)) {
+                } else if (board.validAttack(currentPosition, newPosition, board)) {
                     board.move(currentPosition, newPosition);
                     board.printBoard();
 
@@ -47,7 +47,7 @@ public class CheckersGame {
                     }
                 }
             } else {
-                System.out.println("Player " + currentPlayer.getPlayerNumber() + " this is an invalid move, please try again.");
+                System.out.println(currentPlayer + " this is an invalid move, please try again.");
             }
 
             if (currentPlayer.getPiecesCount() == 0) {

@@ -44,4 +44,9 @@ public class Player {
         result = 31 * result + playerNumber;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Player " + playerNumber;
+    }
 }

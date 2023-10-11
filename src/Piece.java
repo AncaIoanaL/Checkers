@@ -8,10 +8,6 @@ public class Piece {
         this.currentPosition = currentPosition;
     }
 
-    public Position getCurrentPosition() {
-        return currentPosition;
-    }
-
     public Colour getColour() {
         return colour;
     }

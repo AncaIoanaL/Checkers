@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Board {
 
     private final Piece[][] positions = new Piece[8][8];
@@ -49,7 +47,7 @@ public class Board {
         return positions[position.getRow() + rowOffset][position.getColumn() + columnOffset];
     }
 
-    public boolean validateMove(Position currentPosition, Position newPosition) {
+    public boolean validMove(Position currentPosition, Position newPosition) {
         Piece piece = getPiece(currentPosition);
 
         if (piece instanceof King) {
@@ -66,35 +64,43 @@ public class Board {
         }
     }
 
-    public boolean validateAttack(Position currentPosition, Position newPosition, Board board) {
-        Piece piece = getPiece(currentPosition);
+    public boolean validAttack(Position currentPosition, Position newPosition, Board board) {
+        Piece currentPositionPiece = getPiece(currentPosition);
+        Piece newPositionPiece = getPiece(newPosition);
 
-        if (piece instanceof King) {
+        if (currentPositionPiece instanceof King) {
             if (Math.abs(currentPosition.getRow() - newPosition.getRow()) == Math.abs(currentPosition.getColumn() - newPosition.getColumn()) &&
-                    getPiece(newPosition) == null && validateBishopInBetweenPositions(currentPosition, newPosition, board)) {
-                Piece attackPiece = board.getPiece(newPosition, 1, -1);
-                Piece attackPiece2 =  board.getPiece(newPosition, -1, -1);
-                Piece attackPiece3 = board.getPiece(newPosition, -1, 1);
-                Piece attackPiece4 = board.getPiece(newPosition, 1, 1);
+                    newPositionPiece == null && validInBetweenPositions(currentPosition, newPosition, board)) {
+                int currentRow = currentPosition.getRow();
+                int newRow = newPosition.getRow();
+                int currentColumn = currentPosition.getColumn();
+                int newColumn = newPosition.getColumn();
 
-                return getPiece(currentPosition).getColour().equals(attackPiece.getColour()) || getPiece(currentPosition).getColour().equals(attackPiece2.getColour())
-                        || getPiece(currentPosition).getColour().equals(attackPiece3.getColour()) || getPiece(currentPosition).getColour().equals(attackPiece4.getColour());
+                if (currentRow < newRow && currentColumn > newColumn) {
+                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, -1, 1).getColour());
+                } else if (currentRow > newRow && currentColumn > newColumn) {
+                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, 1, 1).getColour());
+                } else if (currentRow > newRow && currentColumn < newColumn) {
+                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, 1, -1).getColour());
+                } else {
+                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, -1, -1).getColour());
+                }
             }
         } else {
-            if (Math.abs(currentPosition.getRow() - newPosition.getRow()) == 2 && Math.abs(currentPosition.getColumn() - newPosition.getColumn()) == 2 && getPiece(newPosition) == null) {
-                int rowDifference = newPosition.getRow() - currentPosition.getRow();
-                int columnDifference = newPosition.getColumn() - currentPosition.getColumn();
+            int rowDifference = newPosition.getRow() - currentPosition.getRow();
+            int columnDifference = newPosition.getColumn() - currentPosition.getColumn();
 
+            if (Math.abs(rowDifference) == 2 && Math.abs(columnDifference) == 2 && newPositionPiece == null) {
                 Position position = new Position(currentPosition.getRow() + rowDifference / 2, currentPosition.getColumn() + columnDifference / 2);
 
-                return getPiece(currentPosition).getColour().equals(getPiece(position).getColour());
+                return !currentPositionPiece.getColour().equals(getPiece(position).getColour());
             }
         }
         return false;
     }
 
-    private boolean validateBishopInBetweenPositions(Position currentPosition, Position newPosition, Board board) {
-        for (int i = 1; i <= Math.abs(currentPosition.getColumn() - newPosition.getColumn()); i++) {
+    private boolean validInBetweenPositions(Position currentPosition, Position newPosition, Board board) {
+        for (int i = 1; i < Math.abs(currentPosition.getColumn() - newPosition.getColumn()) - 1; i++) {
             if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
                 if (board.getPiece(currentPosition, -i, -i) != null) {
                     return false;
@@ -117,7 +123,7 @@ public class Board {
         return true;
     }
 
-    public static boolean validateIfPieceCanBeKing(Position currentPosition, Colour colour) {
+    public boolean validateIfPieceCanBecomeKing(Position currentPosition, Colour colour) {
         if (Colour.BLACK.equals(colour)) {
             for (int i = 0; i < 8; i++) {
                 if (currentPosition.getRow() == 0 && currentPosition.getColumn() == i) {
@@ -146,9 +152,8 @@ public class Board {
     }
 
     public void printBoard() {
-        System.out.println();
         for (int i = 0; i < 8; i++) {
-            System.out.print((8 - i) + " | ");
+            System.out.print("\n" + (8 - i) + " | ");
             for (int j = 0; j < 8; j++) {
                 if (getPiece(i, j) == null) {
                     if ((i + j) % 2 == 0) {
@@ -160,9 +165,8 @@ public class Board {
                     System.out.print(getPiece(i, j) + " ");
                 }
             }
-            System.out.println();
         }
-        System.out.println("   ------------------------");
+        System.out.println("\n   ------------------------");
         System.out.println("    A  B  C  D  E  F  G  H");
         System.out.println();
     }
