@@ -47,7 +47,7 @@ public class Board {
         return positions[position.getRow() + rowOffset][position.getColumn() + columnOffset];
     }
 
-    public boolean validMove(Position currentPosition, Position newPosition) {
+    public boolean validateMove(Position currentPosition, Position newPosition) {
         Piece piece = getPiece(currentPosition);
 
         if (piece instanceof King) {
@@ -64,42 +64,44 @@ public class Board {
         }
     }
 
-    public boolean validAttack(Position currentPosition, Position newPosition, Board board) {
+    public boolean validateAttack(Position currentPosition, Position newPosition, Board board) {
         Piece currentPositionPiece = getPiece(currentPosition);
         Piece newPositionPiece = getPiece(newPosition);
 
         if (currentPositionPiece instanceof King) {
             if (Math.abs(currentPosition.getRow() - newPosition.getRow()) == Math.abs(currentPosition.getColumn() - newPosition.getColumn()) &&
-                    newPositionPiece == null && validInBetweenPositions(currentPosition, newPosition, board)) {
+                    newPositionPiece == null && validateInBetweenPositions(currentPosition, newPosition, board)) {
                 int currentRow = currentPosition.getRow();
                 int newRow = newPosition.getRow();
                 int currentColumn = currentPosition.getColumn();
                 int newColumn = newPosition.getColumn();
 
+                Piece attackedPiece;
+
                 if (currentRow < newRow && currentColumn > newColumn) {
-                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, -1, 1).getColour());
+                    attackedPiece = board.getPiece(newPosition, -1, 1);
                 } else if (currentRow > newRow && currentColumn > newColumn) {
-                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, 1, 1).getColour());
+                    attackedPiece = board.getPiece(newPosition, 1, 1);
                 } else if (currentRow > newRow && currentColumn < newColumn) {
-                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, 1, -1).getColour());
+                    attackedPiece = board.getPiece(newPosition, 1, -1);
                 } else {
-                    return !currentPositionPiece.getColour().equals(board.getPiece(newPosition, -1, -1).getColour());
+                    attackedPiece = board.getPiece(newPosition, -1, -1);
                 }
+
+                return attackedPiece != null && !currentPositionPiece.getColour().equals(attackedPiece.getColour());
             }
         } else {
             int rowDifference = newPosition.getRow() - currentPosition.getRow();
             int columnDifference = newPosition.getColumn() - currentPosition.getColumn();
 
             if (Math.abs(rowDifference) == 2 && Math.abs(columnDifference) == 2 && newPositionPiece == null) {
-                Position position = new Position(currentPosition.getRow() + rowDifference / 2, currentPosition.getColumn() + columnDifference / 2);
-
-                return !currentPositionPiece.getColour().equals(getPiece(position).getColour());
+                return !currentPositionPiece.getColour().equals(getPiece(currentPosition, rowDifference / 2, columnDifference / 2).getColour());
             }
         }
         return false;
     }
 
-    private boolean validInBetweenPositions(Position currentPosition, Position newPosition, Board board) {
+    private boolean validateInBetweenPositions(Position currentPosition, Position newPosition, Board board) {
         for (int i = 1; i < Math.abs(currentPosition.getColumn() - newPosition.getColumn()) - 1; i++) {
             if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
                 if (board.getPiece(currentPosition, -i, -i) != null) {

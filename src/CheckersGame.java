@@ -22,7 +22,7 @@ public class CheckersGame {
             Position newPosition = readPosition(scanner);
 
             if (validatePlayerColour(pieceToMove, currentPlayer)) {
-                if (board.validMove(currentPosition, newPosition)) {
+                if (board.validateMove(currentPosition, newPosition)) {
                     board.move(currentPosition, newPosition);
 
                     if (board.validateIfPieceCanBecomeKing(currentPosition, currentPlayer.getColour())) {
@@ -36,7 +36,7 @@ public class CheckersGame {
                     } else {
                         currentPlayer = PLAYER_1;
                     }
-                } else if (board.validAttack(currentPosition, newPosition, board)) {
+                } else if (board.validateAttack(currentPosition, newPosition, board)) {
                     board.move(currentPosition, newPosition);
                     board.printBoard();
 
