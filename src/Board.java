@@ -172,4 +172,47 @@ public class Board {
         System.out.println("    A  B  C  D  E  F  G  H");
         System.out.println();
     }
+
+    public boolean validateIfAnotherAttackIsPossible(Position currentPosition, Board board) {
+        Piece currentPositionPiece = getPiece(currentPosition);
+        int row = currentPosition.getRow();
+        int column = currentPosition.getColumn();
+
+
+        if (!validateInBetweenPositions(currentPosition, new Position(row - Math.min(row, column), column - Math.min(row, column)), board)) {
+            for ( int i = 1; i < Math.min(row, column); i ++) {
+                if (!board.getPiece(currentPosition, -i, -i).getColour().equals(currentPositionPiece.getColour())) {
+                    if (board.getPiece(currentPosition, -i - 1, -i - 1) == null) {
+                        return true;
+                    }
+                }
+            }// left up
+        } else if (!validateInBetweenPositions(currentPosition, new Position(row - Math.min(row, 7 -  column), column + Math.min(row, 7 - column)), board)) {
+            for ( int i = 1; i < Math.min(row, column); i ++) {
+                if (!board.getPiece(currentPosition, -i, i).getColour().equals(currentPositionPiece.getColour())) {
+                    if (board.getPiece(currentPosition, -i - 1, i + 1) == null) {
+                        return true;
+                    }
+                }
+            }//right up
+        } else if (!validateInBetweenPositions(currentPosition, new Position(row + Math.min(7 - row, 7 - column), column + Math.min(7 - row, 7 - column)), board)) {
+            for ( int i = 1; i < Math.min(row, column); i ++) {
+                if (!board.getPiece(currentPosition, i, i).getColour().equals(currentPositionPiece.getColour())) {
+                    if (board.getPiece(currentPosition, i + 1, i + 1) == null) {
+                        return true;
+                    }
+                }
+            }//right down
+        } else if (!validateInBetweenPositions(currentPosition, new Position(row + Math.min(7 - row, column), column - Math.min(7 - row, column)), board)) {
+            for ( int i = 1; i < Math.min(row, column); i ++) {
+                if (!board.getPiece(currentPosition, i, -i).getColour().equals(currentPositionPiece.getColour())) {
+                    if (board.getPiece(currentPosition, i + 1, -i - 1) == null) {
+                        return true;
+                    }
+                }
+            }
+        }// left down
+
+        return false;
+    }
 }

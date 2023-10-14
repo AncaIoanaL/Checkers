@@ -45,6 +45,19 @@ public class CheckersGame {
                     } else {
                         PLAYER_1.decrementPieceCount();
                     }
+
+                    if (pieceToMove instanceof King) {
+                        while (board.validateIfAnotherAttackIsPossible(currentPosition, board)) {
+                            System.out.print("Another attack is possible, " + currentPlayer + " enter new position: ");
+                            newPosition = readPosition(scanner);
+
+                            if (currentPlayer.equals(PLAYER_1)) {
+                                PLAYER_2.decrementPieceCount();
+                            } else {
+                                PLAYER_1.decrementPieceCount();
+                            }
+                        }
+                    }
                 }
             } else {
                 System.out.println(currentPlayer + " this is an invalid move, please try again.");
