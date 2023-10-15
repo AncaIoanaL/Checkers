@@ -5,11 +5,6 @@ public class King extends Piece {
     }
 
     @Override
-    public void move(Position newPosition) {
-        super.move(newPosition);
-    }
-
-    @Override
     public boolean validateIfAnotherAttackIsPossible(Board board) {
         int column = getCurrentPosition().getColumn();
         int row = getCurrentPosition().getRow();

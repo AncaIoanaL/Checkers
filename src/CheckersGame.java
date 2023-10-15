@@ -34,7 +34,7 @@ public class CheckersGame {
 
                     currentPlayer = getNextPlayer(currentPlayer);
                 } else if (board.validateAttack(currentPosition, newPosition)) {
-                    board.attackMove(currentPosition, newPosition);
+                    board.attack(currentPosition, newPosition);
                     board.printBoard();
 
                     decrementPieceCount(currentPlayer);

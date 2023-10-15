@@ -161,7 +161,7 @@ public class Board {
         positions[currentPosition.getRow()][currentPosition.getColumn()] = null;
     }
 
-    public void attackMove(Position currentPosition, Position newPosition) {
+    public void attack(Position currentPosition, Position newPosition) {
         move(currentPosition, newPosition);
 
         int currentRow = currentPosition.getRow();
@@ -169,23 +169,23 @@ public class Board {
         int currentColumn = currentPosition.getColumn();
         int newColumn = newPosition.getColumn();
 
-        Position attackedPiece;
+        Position attackedPosition;
 
         // left down
         if (currentRow < newRow && currentColumn > newColumn) {
-            attackedPiece = getPiece(newPosition, -1, 1).getCurrentPosition();
+            attackedPosition = new Position(newPosition, 1, -1);
         // left up
         } else if (currentRow > newRow && currentColumn > newColumn) {
-            attackedPiece = getPiece(newPosition, 1, 1).getCurrentPosition();
+            attackedPosition = new Position(newPosition, -1, -1);
         // right up
         } else if (currentRow > newRow && currentColumn < newColumn) {
-            attackedPiece = getPiece(newPosition, 1, -1).getCurrentPosition();
+            attackedPosition = new Position(newPosition, -1, 1);
         // right down
         } else {
-            attackedPiece = getPiece(newPosition, -1, -1).getCurrentPosition();
+            attackedPosition = new Position(newPosition, 1, 1);
         }
 
-        positions[attackedPiece.getRow()][attackedPiece.getColumn()] = null;
+        positions[attackedPosition.getRow()][attackedPosition.getColumn()] = null;
     }
 
     public void printBoard() {
