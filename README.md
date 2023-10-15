@@ -8,5 +8,5 @@ The program has validating methods for each piece and it keeps track of how many
 Although the program is functional, I am still yet to add the below features to it:
 - add a UI to the game
 
-In order for the board to be properly aligned, please ensure you are using a monospaced font that supports unicode characters, such as NSimSun, MS Gothic and SimSun.
+In order for the board to be properly aligned, please ensure you are using a monospaced font that supports unicode characters, such as NSimSun, MS Gothic or SimSun.
 

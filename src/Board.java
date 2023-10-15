@@ -51,7 +51,7 @@ public class Board {
         Piece piece = getPiece(currentPosition);
 
         if (piece instanceof King) {
-            return Math.abs(currentPosition.getColumn() - newPosition.getColumn()) == currentPosition.getRow() - newPosition.getRow() &&
+            return Math.abs(currentPosition.getColumn() - newPosition.getColumn()) == Math.abs(currentPosition.getRow() - newPosition.getRow()) &&
                     getPiece(newPosition) == null;
         } else {
             if (Colour.BLACK.equals(piece.getColour())) {
@@ -78,12 +78,16 @@ public class Board {
 
                 Piece attackedPiece;
 
+                // left down
                 if (currentRow < newRow && currentColumn > newColumn) {
                     attackedPiece = getPiece(newPosition, -1, 1);
+                // left up
                 } else if (currentRow > newRow && currentColumn > newColumn) {
                     attackedPiece = getPiece(newPosition, 1, 1);
+                // right up
                 } else if (currentRow > newRow && currentColumn < newColumn) {
                     attackedPiece = getPiece(newPosition, 1, -1);
+                // right down
                 } else {
                     attackedPiece = getPiece(newPosition, -1, -1);
                 }
@@ -103,18 +107,22 @@ public class Board {
 
     private boolean validateInBetweenPositions(Position currentPosition, Position newPosition) {
         for (int i = 1; i < Math.abs(currentPosition.getColumn() - newPosition.getColumn()) - 1; i++) {
+            // left up
             if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
                 if (getPiece(currentPosition, -i, -i) != null) {
                     return false;
                 }
+            // right up
             } else if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() < newPosition.getColumn()) {
                 if (getPiece(currentPosition, -i, i) != null) {
                     return false;
                 }
+            // right down
             } else if (currentPosition.getRow() < newPosition.getRow() && currentPosition.getColumn() < newPosition.getColumn()) {
                 if (getPiece(currentPosition, i, i) != null) {
                     return false;
                 }
+            // left down
             } else if (currentPosition.getRow() < newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
                 if (getPiece(currentPosition, i, -i) != null) {
                     return false;
@@ -151,6 +159,33 @@ public class Board {
 
         positions[newPosition.getRow()][newPosition.getColumn()] = positions[currentPosition.getRow()][currentPosition.getColumn()];
         positions[currentPosition.getRow()][currentPosition.getColumn()] = null;
+    }
+
+    public void attackMove(Position currentPosition, Position newPosition) {
+        move(currentPosition, newPosition);
+
+        int currentRow = currentPosition.getRow();
+        int newRow = newPosition.getRow();
+        int currentColumn = currentPosition.getColumn();
+        int newColumn = newPosition.getColumn();
+
+        Position attackedPiece;
+
+        // left down
+        if (currentRow < newRow && currentColumn > newColumn) {
+            attackedPiece = getPiece(newPosition, -1, 1).getCurrentPosition();
+        // left up
+        } else if (currentRow > newRow && currentColumn > newColumn) {
+            attackedPiece = getPiece(newPosition, 1, 1).getCurrentPosition();
+        // right up
+        } else if (currentRow > newRow && currentColumn < newColumn) {
+            attackedPiece = getPiece(newPosition, 1, -1).getCurrentPosition();
+        // right down
+        } else {
+            attackedPiece = getPiece(newPosition, -1, -1).getCurrentPosition();
+        }
+
+        positions[attackedPiece.getRow()][attackedPiece.getColumn()] = null;
     }
 
     public void printBoard() {
