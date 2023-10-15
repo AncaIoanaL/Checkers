@@ -64,13 +64,13 @@ public class Board {
         }
     }
 
-    public boolean validateAttack(Position currentPosition, Position newPosition, Board board) {
+    public boolean validateAttack(Position currentPosition, Position newPosition) {
         Piece currentPositionPiece = getPiece(currentPosition);
         Piece newPositionPiece = getPiece(newPosition);
 
         if (currentPositionPiece instanceof King) {
             if (Math.abs(currentPosition.getRow() - newPosition.getRow()) == Math.abs(currentPosition.getColumn() - newPosition.getColumn()) &&
-                    newPositionPiece == null && validateInBetweenPositions(currentPosition, newPosition, board)) {
+                    newPositionPiece == null && validateInBetweenPositions(currentPosition, newPosition)) {
                 int currentRow = currentPosition.getRow();
                 int newRow = newPosition.getRow();
                 int currentColumn = currentPosition.getColumn();
@@ -79,13 +79,13 @@ public class Board {
                 Piece attackedPiece;
 
                 if (currentRow < newRow && currentColumn > newColumn) {
-                    attackedPiece = board.getPiece(newPosition, -1, 1);
+                    attackedPiece = getPiece(newPosition, -1, 1);
                 } else if (currentRow > newRow && currentColumn > newColumn) {
-                    attackedPiece = board.getPiece(newPosition, 1, 1);
+                    attackedPiece = getPiece(newPosition, 1, 1);
                 } else if (currentRow > newRow && currentColumn < newColumn) {
-                    attackedPiece = board.getPiece(newPosition, 1, -1);
+                    attackedPiece = getPiece(newPosition, 1, -1);
                 } else {
-                    attackedPiece = board.getPiece(newPosition, -1, -1);
+                    attackedPiece = getPiece(newPosition, -1, -1);
                 }
 
                 return attackedPiece != null && !currentPositionPiece.getColour().equals(attackedPiece.getColour());
@@ -101,22 +101,22 @@ public class Board {
         return false;
     }
 
-    private boolean validateInBetweenPositions(Position currentPosition, Position newPosition, Board board) {
+    private boolean validateInBetweenPositions(Position currentPosition, Position newPosition) {
         for (int i = 1; i < Math.abs(currentPosition.getColumn() - newPosition.getColumn()) - 1; i++) {
             if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
-                if (board.getPiece(currentPosition, -i, -i) != null) {
+                if (getPiece(currentPosition, -i, -i) != null) {
                     return false;
                 }
             } else if (currentPosition.getRow() > newPosition.getRow() && currentPosition.getColumn() < newPosition.getColumn()) {
-                if (board.getPiece(currentPosition, -i, i) != null) {
+                if (getPiece(currentPosition, -i, i) != null) {
                     return false;
                 }
             } else if (currentPosition.getRow() < newPosition.getRow() && currentPosition.getColumn() < newPosition.getColumn()) {
-                if (board.getPiece(currentPosition, i, i) != null) {
+                if (getPiece(currentPosition, i, i) != null) {
                     return false;
                 }
             } else if (currentPosition.getRow() < newPosition.getRow() && currentPosition.getColumn() > newPosition.getColumn()) {
-                if (board.getPiece(currentPosition, i, -i) != null) {
+                if (getPiece(currentPosition, i, -i) != null) {
                     return false;
                 }
             }
@@ -171,48 +171,5 @@ public class Board {
         System.out.println("\n   ------------------------");
         System.out.println("    A  B  C  D  E  F  G  H");
         System.out.println();
-    }
-
-    public boolean validateIfAnotherAttackIsPossible(Position currentPosition, Board board) {
-        Piece currentPositionPiece = getPiece(currentPosition);
-        int row = currentPosition.getRow();
-        int column = currentPosition.getColumn();
-
-
-        if (!validateInBetweenPositions(currentPosition, new Position(row - Math.min(row, column), column - Math.min(row, column)), board)) {
-            for ( int i = 1; i < Math.min(row, column); i ++) {
-                if (!board.getPiece(currentPosition, -i, -i).getColour().equals(currentPositionPiece.getColour())) {
-                    if (board.getPiece(currentPosition, -i - 1, -i - 1) == null) {
-                        return true;
-                    }
-                }
-            }// left up
-        } else if (!validateInBetweenPositions(currentPosition, new Position(row - Math.min(row, 7 -  column), column + Math.min(row, 7 - column)), board)) {
-            for ( int i = 1; i < Math.min(row, column); i ++) {
-                if (!board.getPiece(currentPosition, -i, i).getColour().equals(currentPositionPiece.getColour())) {
-                    if (board.getPiece(currentPosition, -i - 1, i + 1) == null) {
-                        return true;
-                    }
-                }
-            }//right up
-        } else if (!validateInBetweenPositions(currentPosition, new Position(row + Math.min(7 - row, 7 - column), column + Math.min(7 - row, 7 - column)), board)) {
-            for ( int i = 1; i < Math.min(row, column); i ++) {
-                if (!board.getPiece(currentPosition, i, i).getColour().equals(currentPositionPiece.getColour())) {
-                    if (board.getPiece(currentPosition, i + 1, i + 1) == null) {
-                        return true;
-                    }
-                }
-            }//right down
-        } else if (!validateInBetweenPositions(currentPosition, new Position(row + Math.min(7 - row, column), column - Math.min(7 - row, column)), board)) {
-            for ( int i = 1; i < Math.min(row, column); i ++) {
-                if (!board.getPiece(currentPosition, i, -i).getColour().equals(currentPositionPiece.getColour())) {
-                    if (board.getPiece(currentPosition, i + 1, -i - 1) == null) {
-                        return true;
-                    }
-                }
-            }
-        }// left down
-
-        return false;
     }
 }

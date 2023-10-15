@@ -10,6 +10,7 @@ public class CheckersGame {
         board.initialiseBoard();
         board.printBoard();
         Player currentPlayer = PLAYER_1;
+        boolean playerNeedsToAttack = false;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -22,7 +23,7 @@ public class CheckersGame {
             Position newPosition = readPosition(scanner);
 
             if (validatePlayerColour(pieceToMove, currentPlayer)) {
-                if (board.validateMove(currentPosition, newPosition)) {
+                if (!playerNeedsToAttack && board.validateMove(currentPosition, newPosition)) {
                     board.move(currentPosition, newPosition);
 
                     if (board.validateIfPieceCanBecomeKing(currentPosition, currentPlayer.getColour())) {
@@ -31,44 +32,27 @@ public class CheckersGame {
 
                     board.printBoard();
 
-                    if (currentPlayer.equals(PLAYER_1)) {
-                        currentPlayer = PLAYER_2;
-                    } else {
-                        currentPlayer = PLAYER_1;
-                    }
-                } else if (board.validateAttack(currentPosition, newPosition, board)) {
+                    currentPlayer = getNextPlayer(currentPlayer);
+                } else if (board.validateAttack(currentPosition, newPosition)) {
                     board.move(currentPosition, newPosition);
                     board.printBoard();
 
-                    if (currentPlayer.equals(PLAYER_1)) {
-                        PLAYER_2.decrementPieceCount();
+                    decrementPieceCount(currentPlayer);
+
+                    if (currentPlayer.getPiecesCount() == 0) {
+                        announceWinner(currentPlayer);
+                    } else if (pieceToMove.validateIfAnotherAttackIsPossible(board)) {
+                        System.out.print("Another attack is possible, " + currentPlayer + ". Enter one more position: ");
+                        playerNeedsToAttack = true;
                     } else {
-                        PLAYER_1.decrementPieceCount();
+                        currentPlayer = getNextPlayer(currentPlayer);
+                        playerNeedsToAttack = false;
                     }
-
-                    if (pieceToMove instanceof King) {
-                        while (board.validateIfAnotherAttackIsPossible(currentPosition, board)) {
-                            System.out.print("Another attack is possible, " + currentPlayer + " enter new position: ");
-                            newPosition = readPosition(scanner);
-
-                            if (currentPlayer.equals(PLAYER_1)) {
-                                PLAYER_2.decrementPieceCount();
-                            } else {
-                                PLAYER_1.decrementPieceCount();
-                            }
-                        }
-                    }
+                } else {
+                    System.out.println(currentPlayer + " this is an invalid move, please try again.");
                 }
             } else {
                 System.out.println(currentPlayer + " this is an invalid move, please try again.");
-            }
-
-            if (currentPlayer.getPiecesCount() == 0) {
-                if (currentPlayer.getPlayerNumber() == 1) {
-                    System.out.println("PLAYER 2 HAS WON!");
-                } else {
-                    System.out.println("PLAYER 1 HAS WON!");
-                }
             }
         }
     }
@@ -82,5 +66,29 @@ public class CheckersGame {
 
     private static boolean validatePlayerColour(Piece pieceToMove, Player currentPlayer) {
         return pieceToMove.getColour().equals(currentPlayer.getColour());
+    }
+
+    public static Player getNextPlayer(Player currentPlayer) {
+        if (currentPlayer.equals(PLAYER_1)) {
+            return PLAYER_2;
+        } else {
+            return PLAYER_1;
+        }
+    }
+
+    public static void decrementPieceCount(Player currentPlayer) {
+        if (currentPlayer.equals(PLAYER_1)) {
+            PLAYER_2.decrementPieceCount();
+        } else {
+            PLAYER_1.decrementPieceCount();
+        }
+    }
+
+    public static void announceWinner(Player currentPlayer) {
+        if (currentPlayer.getPlayerNumber() == 1) {
+            System.out.println("PLAYER 2 HAS WON!");
+        } else {
+            System.out.println("PLAYER 1 HAS WON!");
+        }
     }
 }

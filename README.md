@@ -6,7 +6,6 @@ Java program to play checkers. The program uses Scanner to take the current posi
 The program has validating methods for each piece and it keeps track of how many pieces each player has left in order to determine a winner.
 
 Although the program is functional, I am still yet to add the below features to it:
-- validate if more than one attack is possible
 - add a UI to the game
 
 In order for the board to be properly aligned, please ensure you are using a monospaced font that supports unicode characters, such as NSimSun, MS Gothic and SimSun.
